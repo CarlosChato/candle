@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Lumus animus ✨</title>
+  <style>
+    html, body {
+      margin: 0; padding: 40px 0 0 0; /* padding top para que no se corte */
+      height: 100%;
+      background: radial-gradient(circle at center, #1e1e2f, #0f0f1c);
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center; touch-action: manipulation;
+      user-select: none;
+      overflow-x: hidden;
+      overflow-y: auto; /* permitir scroll si se necesita */
+    }
+    .scene {
+      display: flex; align-items: flex-end; gap: 40px;
+      margin-bottom: 30px;
+      position: relative; /* para la posición de elementos hijos */
+    }
+    .cactus-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cactus {
+      position: relative;
+      width: 80px; height: 160px;
+      background: #4caf50; border-radius: 40px;
+      box-shadow: inset -5px -5px 10px rgba(0,0,0,0.2);
+    }
+    .cactus::before, .cactus::after {
+      content: ''; position: absolute;
+      width: 40px; height: 80px;
+      background: #4caf50; border-radius: 20px;
+    }
+    .cactus::before { left: -25px; top: 40px; transform: rotate(-20deg); }
+    .cactus::after { right: -25px; top: 40px; transform: rotate(20deg); }
+
+    /* Macetero */
+    .pot {
+      width: 100px;
+      height: 40px;
+      background: linear-gradient(135deg, #a0522d, #6b3a1a);
+      border-radius: 20px 20px 10px 10px;
+      box-shadow: inset 0 -5px 8px #523419;
+      margin-top: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .pot::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 10px;
+      width: 80px;
+      height: 10px;
+      background: linear-gradient(135deg, #7c4625, #4a2a10);
+      border-radius: 8px 8px 0 0;
+      box-shadow: inset 0 2px 4px #3b230d;
+    }
+
+    .flame {
+      position: absolute; top: -40px; /* menos negativo para que no se corte */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 45px; height: 65px;
+      background: radial-gradient(circle, #ffea00, #ff9900, #ff5500);
+      border-radius: 50%; animation: flicker 0.3s infinite;
+      box-shadow: 0 0 20px 8px rgba(255,165,0,0.6);
+      cursor: pointer; z-index: 2;
+    }
+    @keyframes flicker {
+      0%,100% { transform: translateX(-50%) scaleY(1); opacity:1;}
+      50% { transform: translateX(-50%) scaleY(1.1); opacity:0.85;}
+    }
+
+    .labubu-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .labubu {
+      width: 100px; height: auto;
+      opacity: 0.8;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      display: block;
+    }
+    .labubu.react {
+      animation: pop 0.6s ease;
+    }
+    @keyframes pop {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+
+    .encouragement {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px);
+      background: #ffcc00cc;
+      color: #333;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 1rem;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      user-select: none;
+      white-space: nowrap;
+      box-shadow: 0 0 10px #ffcc00;
+      z-index: 5;
+    }
+    .encouragement.show {
+      opacity: 1;
+      animation: popEncourage 1s ease forwards;
+    }
+    @keyframes popEncourage {
+      0% { transform: translateX(-50%) translateY(10px); opacity: 0; }
+      50% { transform: translateX(-50%) translateY(-5px); opacity: 1; }
+      100% { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+    }
+
+    .message {
+      font-size: 1.4rem; max-width: 90vw; line-height:1.6;
+      padding: 0 20px; opacity:0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .message.show {
+      opacity:1; transform: translateY(0);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    .message.fade-out {
+      animation: fadeOutMagic 1s forwards;
+    }
+    @keyframes glow {
+      from { text-shadow:0 0 10px #ffcc00,0 0 20px #ffcc00; }
+      to   { text-shadow:0 0 20px #fff,0 0 40px #ffdd55; }
+    }
+    @keyframes fadeOutMagic {
+      0% { opacity:1; transform:translateY(0); text-shadow:0 0 20px #fff,0 0 40px #ffdd55; }
+      100% { opacity:0; transform:translateY(-20px) scale(0.9); text-shadow:0 0 0 transparent; }
+    }
+
+    .particles {
+      position: fixed; top:0; left:0; width:100vw; height:100vh;
+      pointer-events:none; z-index:0;
+    }
+    .particle {
+      position: absolute; width:6px; height:6px;
+      background:#fffacd; border-radius:50%;
+      opacity:0.8; animation: float 1.2s ease-out forwards;
+    }
+    @keyframes float {
+      0% { transform:scale(1); opacity:1; }
+      100% { transform:translateY(-100vh) scale(0.2); opacity:0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <div class="cactus-wrapper">
+      <div class="cactus">
+        <div class="flame" id="flame"></div>
+      </div>
+      <div class="pot"></div>
+    </div>
+
+    <div class="labubu-wrapper">
+      <img src="./assets/labubu.png" alt="Labubu" class="labubu" id="labubu">
+      <div id="encouragement" class="encouragement">¡Ánimo!</div>
+    </div>
+  </div>
+  <div class="message" id="message"></div>
+  <div class="particles" id="particles"></div>
+
+  <script>
+    const flame = document.getElementById("flame");
+    const message = document.getElementById("message");
+    const particles = document.getElementById("particles");
+    const labubu = document.getElementById("labubu");
+    const encouragement = document.getElementById("encouragement");
+
+    const messages = [
+      "✨ Lumos Ánimo: ¡Estás más que preparada para este examen! 🚘",
+      "✨ Creo en ti! ya lo tienes mas que aprobado <3",
+      "✨ ¡Ánimo! Dale a ese acelerador a fondo y lo tienes.",
+      "✨ Un cafecito antes y ese es nuetro motor ;)",
+      "✨ No es suerte. Es que eres una pedazo de conductura!! :3",
+      "✨ Esta vez sí ¡A por todas conductora! 💪",
+      "✨ El coche ya te está esperando en casa :P ."
+    ];
+
+    let currentMsg = 0;
+    let fadeTimeout = null;
+    let resetTimeout = null;
+
+    function showMsg() {
+      // Limpiar timeouts si hay uno pendiente para evitar bugs
+      if(fadeTimeout) {
+        clearTimeout(fadeTimeout);
+        fadeTimeout = null;
+      }
+      if(resetTimeout) {
+        clearTimeout(resetTimeout);
+        resetTimeout = null;
+      }
+
+      // Mostrar el mensaje actual
+      message.textContent = messages[currentMsg];
+      message.classList.remove("fade-out");
+      message.classList.add("show");
+      labubu.classList.add("react");
+      showParticles();
+
+      encouragement.classList.add("show");
+      setTimeout(() => encouragement.classList.remove("show"), 1200);
+
+      // Programar que el mensaje desaparezca
+      fadeTimeout = setTimeout(() => {
+        message.classList.remove("show");
+        message.classList.add("fade-out");
+        labubu.classList.remove("react");
+        // Después de la animación de fadeOut (1s), quitar la clase fade-out
+        resetTimeout = setTimeout(() => {
+          message.classList.remove("fade-out");
+        }, 1000);
+      }, 7000);
+
+      // Preparar el índice para la siguiente llamada
+      currentMsg = (currentMsg + 1) % messages.length;
+    }
+
+    function showParticles() {
+      for (let i=0; i<50; i++){
+        const p = document.createElement("div");
+        p.className="particle";
+        p.style.left = `${Math.random()*100}vw`;
+        p.style.top = `${100+Math.random()*20}vh`;
+        p.style.backgroundColor = `hsl(${Math.random()*60+40},100%,70%)`;
+        p.style.animationDuration = `${0.8+Math.random()*0.7}s`;
+        particles.appendChild(p);
+        setTimeout(()=>p.remove(),1500);
+      }
+    }
+
+    flame.addEventListener("click", showMsg);
+    flame.addEventListener("touchstart", (e) => { e.preventDefault(); showMsg(); });
+  </script>
+</body>
+</html>
